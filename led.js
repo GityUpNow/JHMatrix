@@ -1,12 +1,15 @@
-var rgb = new Uint8ClampedArray([]);
+var width = 13;
+var height = 13;
+
+var pixelCount = width * height * 3; 
+
+var rgb = new Uint8ClampedArray(pixelCount);
 //var g = Object.create(g.__proto__.constructor["prototype"]);
 var g = Graphics.createArrayBuffer(13, 13, 24, {zigzag:true, color_order: 'brg'});
-g.buffer = new ArrayBuffer(507);
+g.buffer = new ArrayBuffer(pixelCount);
 g.flip = function () {SPI2.send4bit(g.buffer, 0b0001, 0b0011);};
 var pos = 50;
 var logo = 1;
-var width = 13;
-var height = 13;
 var arr = [  ];
 function fillRand(c) {
   for (var i = 0; i < c*3; i++) {
@@ -167,6 +170,10 @@ function changePattern() {
 var cycle = 1;
 //setInterval(doLights, 200);
 
+setInterval(function(e){
+    changePattern();
+    console.log(rgb.length);
+},200);
 
 setInterval(function(e){
     alpaca();
@@ -187,5 +194,6 @@ setWatch(function (e) {
     changePattern();
 }, "A5", { repeat:true, edge:'falling', debounce : 49.99923706054 });
 SPI2.setup({"baud":3200000,"mosi":B15});
+console.log(Uint8ClampedArray([]).length);
 pinMode(B15, "af_output", true);
 save();
