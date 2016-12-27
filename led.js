@@ -20,6 +20,17 @@ function fillRand(c) {
     c = c -1;
   }
 }
+getRainbowPattern(n) {
+  if (n < 85) {
+    return [n * 3, 255 - n * 3, 0];
+  } else if (n < 170) {
+    n -= 85;
+    return [255 - n * 3, 0, n * 3];
+  } else {
+    n -= 170;
+    return [0, n * 3, 255 - n * 3];
+  }
+}
 SPI2.send4bit(arr, 0b0001, 0b0011);
 }
 function lightsOff() {
@@ -82,6 +93,14 @@ var patterns = [
     rgb[i  ] = 0;
     rgb[i+1] = 0;
     rgb[i+2] = 0;
+  },
+  function () {
+  pos++;
+  for (var i=0;i<rgb.length;i+=3) {
+  	t = getRainbowPattern(i);
+    rgb[i  ] = t[0];
+    rgb[i+1] = t[1];
+    rgb[i+2] = t[2];
   }
   SPI2.send4bit(rgb, 0b0001, 0b0011);
 }
