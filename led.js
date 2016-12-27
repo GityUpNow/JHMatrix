@@ -20,7 +20,7 @@ function fillRand(c) {
     c = c -1;
   }
 }
-getRainbowPattern(n) {
+function getRainbowPattern(n) {
   if (n < 85) {
     return [n * 3, 255 - n * 3, 0];
   } else if (n < 170) {
@@ -97,7 +97,7 @@ var patterns = [
   function () {
   pos++;
   for (var i=0;i<rgb.length;i+=3) {
-  	t = getRainbowPattern(i);
+  	t = getRainbowPattern(i/3);
     rgb[i  ] = t[0];
     rgb[i+1] = t[1];
     rgb[i+2] = t[2];
