@@ -165,24 +165,22 @@ var patternNumber = 0;
 function changePattern() {
   patternNumber = (patternNumber+1) % patterns.length;
   getPattern = patterns[patternNumber];
-  console.log(patterns[patternNumber]);
 }
 var cycle = 1;
 //setInterval(doLights, 200);
 
 setInterval(function(e){
-    changePattern();
-    console.log(rgb.length);
+    doLights();
 },200);
 
-setInterval(function(e){
+/*setInterval(function(e){
     alpaca();
     g.setColor(255, 255, 255);
     g.setPixel(9,7);
     g.flip();
     
     setTimeout(alpaca, 800);
-}, 4000);
+}, 4000);*/
 
 setTimeout(function (e) {
     logo++;
@@ -194,6 +192,5 @@ setWatch(function (e) {
     changePattern();
 }, "A5", { repeat:true, edge:'falling', debounce : 49.99923706054 });
 SPI2.setup({"baud":3200000,"mosi":B15});
-console.log(Uint8ClampedArray([]).length);
 pinMode(B15, "af_output", true);
 save();
