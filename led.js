@@ -86,13 +86,15 @@ var patterns = [
      rgb[i+1] = 0;
      rgb[i+2] = Math.random()*255;
   }
-},
+ },
   function () {
+   
   pos++;
   for (var i=0;i<rgb.length;i+=3) {
     rgb[i  ] = 0;
     rgb[i+1] = 0;
     rgb[i+2] = 0;
+    }
   },
   function () {
   pos++;
