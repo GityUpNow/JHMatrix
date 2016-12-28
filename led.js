@@ -13,26 +13,61 @@ var logo = 1;
 var arr = [  ];
 function fillRand(c) {
   for (var i = 0; i < c*3; i++) {
-  var l = E.hwRand().toString();
-  var n = parseInt(l[2]+l[3]+l[4]);
-  if (n <= 255) arr.push(n);
-  if (n > 255) {
-    c = c -1;
+    var l = E.hwRand().toString();
+    var n = parseInt(l[2]+l[3]+l[4]);
+    if (n <= 255) arr.push(n);
+    if (n > 255) {
+      c = c -1;
+    }
   }
-}
-function getRainbowPattern(n) {
-  if (n < 85) {
-    return [n * 3, 255 - n * 3, 0];
-  } else if (n < 170) {
-    n -= 85;
-    return [255 - n * 3, 0, n * 3];
-  } else {
-    n -= 170;
-    return [0, n * 3, 255 - n * 3];
-  }
-}
 SPI2.send4bit(arr, 0b0001, 0b0011);
 }
+/*function hue2rgb(p, q, t) {
+  if (t < 0) t += 1;
+  if (t > 1) t -= 1;
+  if (t < 1/6) return p + (q - p) * 6 * t;
+  if (t < 1/2) return q;
+  if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+  return p;
+}
+function hslToRgb(h, s, l) {
+  var r, g, b;
+  if (s == 0) {
+    r = g = b = l; // achromatic
+  } else {
+    var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    var p = 2 * l - q;
+    r = hue2rgb(p, q, h + 1/3);
+    g = hue2rgb(p, q, h);
+    b = hue2rgb(p, q, h - 1/3);
+  }
+  return [ r, g, b ];
+}*/
+function getRainbowColor(WheelPos) {
+  if (WheelPos < 85) {
+    return [WheelPos * 3, 255 - WheelPos * 3, 0];
+  } else if (WheelPos < 170) {
+    WheelPos -= 85;
+    return [255 - WheelPos * 3, 0, WheelPos * 3];
+  } else {
+    WheelPos -= 170;
+    return [0, WheelPos * 3, 255 - WheelPos * 3];
+  }
+}
+
+max_index = 13 * 13
+off = 0
+
+function getColor(progress) {
+  console.log(progress);
+  var rgb = hslToRgb(progress,1,.5)
+    var c = [rgb[0]*255, rgb[1]*255, rgb[2]*255]
+    return c
+}
+  function offset(n, i, m){
+    return (n + i) % m
+  }
+
 function lightsOff() {
   pos++;
   for (var i=0;i<rgb.length;i+=3) {
@@ -98,8 +133,19 @@ var patterns = [
   },
   function () {
   pos++;
+  off = (pos / 10) % 1;
   for (var i=0;i<rgb.length;i+=3) {
-  	t = getRainbowPattern(i/3);
+    a  = i/3;
+    // i = x + y*width
+    var x = (a % 26);
+    var y = parseInt(a / 13) + 1
+    if (x > 12) {
+      x = 25 - x;
+    }
+    var step = 1. / (13 * 13)
+
+    t = getRainbowColor(offset(x * y * step, off, 1)*255);
+    //console.log(t);
     rgb[i  ] = t[0];
     rgb[i+1] = t[1];
     rgb[i+2] = t[2];
@@ -182,7 +228,7 @@ function doLights() {
     SPI2.send4bit(rgb, 0b0001, 0b0011);
   }
 }
-var patternNumber = 0;
+var patternNumber = 5;
 function changePattern() {
   patternNumber = (patternNumber+1) % patterns.length;
   getPattern = patterns[patternNumber];
@@ -192,7 +238,8 @@ var cycle = 1;
 
 setInterval(function(e){
     doLights();
-},200);
+    console.log(pos);
+},1);
 
 /*setInterval(function(e){
     alpaca();
@@ -208,10 +255,10 @@ setTimeout(function (e) {
     changePattern();
 }, 200);
 //Executed when button pressed
-setWatch(function (e) {
+/*setWatch(function (e) {
     logo++;
     changePattern();
-}, "A5", { repeat:true, edge:'falling', debounce : 49.99923706054 });
+}, "A5", { repeat:true, edge:'falling', debounce : 49.99923706054 });*/
 SPI2.setup({"baud":3200000,"mosi":B15});
 pinMode(B15, "af_output", true);
 save();
