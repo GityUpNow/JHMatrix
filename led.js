@@ -138,13 +138,13 @@ var patterns = [
     a  = i/3;
     // i = x + y*width
     var x = (a % 26);
-    var y = parseInt(a / 13) + 1
+    var y = parseInt(a / 13) + 1;
     if (x > 12) {
       x = 25 - x;
     }
-    var step = 1. / (13 * 13)
+    var step = 1. / max_index;
 
-    t = getRainbowColor(offset(x * y * step, off, 1)*255);
+    t = getRainbowColor(parseInt(offset(x * y * step, off, 1)*255));
     //console.log(t);
     rgb[i  ] = t[0];
     rgb[i+1] = t[1];
@@ -237,8 +237,10 @@ var cycle = 1;
 //setInterval(doLights, 200);
 
 setInterval(function(e){
+  var start = new Date().getTime();
     doLights();
-    console.log(pos);
+    var end = new Date().getTime();
+    console.log(end - start);
 },1);
 
 /*setInterval(function(e){
